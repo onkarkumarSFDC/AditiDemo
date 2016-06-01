@@ -1,0 +1,37 @@
+<apex:component >
+
+<apex:attribute name="order" type="string" description="Order"/>
+ <div class="slds-small-order--2 slds-medium-order--{!order} slds-large-order--1 slds-col--padded"  style=" float: left; width: 100%; margin: 25px 0 0;">
+
+   <div class="men-pro-item simpleCart_shelfItem">
+                                <div class="men-thumb-item">
+                                    <img src="https://p.w3layouts.com/demos/apr-2016/05-04-2016/smart_shop/web/images/a1.png" width="200px" height="200px" alt="" class="pro-image-front"/>
+                                    <img src="https://p.w3layouts.com/demos/apr-2016/05-04-2016/smart_shop/web/images/a1.png" alt="" class="pro-image-back"/>
+                                        <div class="men-cart-pro">
+                                            <div class="inner-men-cart-pro">
+                                                <a href="single.html" class="link-product-add-cart">Quick View</a>
+                                            </div>
+                                        </div>
+                                        <span class="product-new-top">New</span>
+                                        
+                                </div>
+                                <div class="item-info-product ">
+                                    <h4><a href="single.html">Air Tshirt Black</a></h4>
+                                    <div class="info-product-price">
+                                        <span class="item_price">$45.99</span>
+                                        <del>$69.71</del>
+                                    </div>
+                                    <a href="#" class="item_add single-item hvr-outline-out button2" style="display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  background: #FDA30E;">Add to cart</a>                                    
+                                </div>
+                            </div> 
+ </div>
+</apex:component>

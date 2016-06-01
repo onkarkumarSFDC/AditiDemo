@@ -1,0 +1,39 @@
+<apex:page sidebar="false" showHeader="false"  standardController="photo__c" extensions="SlideShow" >
+
+    <apex:pageBlock id="pB" >
+            <apex:form id="frm">
+            <center>
+                <apex:image id="img" value="{!$Resource.JBL_Image1}" width="700" height="450"/>
+                <br></br>
+                <apex:commandButton value="Next" styleClass="groovybutton" onclick="return next()"/>
+            </center>
+            </apex:form>
+    </apex:pageBlock>
+    
+    <apex:form >
+
+        <center>
+    
+        <apex:image url="{!tmp}"/>
+    
+        <br/>
+        <br/>
+        <br/>
+       
+        <apex:commandButton action="{!prev}" value="Previous"/>&nbsp;&nbsp;&nbsp;
+        <apex:commandButton action="{!nxt}" value="Next"/>
+    
+        </center>
+
+  </apex:form>
+
+    <script>
+    function next()
+    {
+    //alert(document.getElementById("page:pB:frm:img").src);
+    document.getElementById("page:pB:frm:img").src='{!$Resource.JBL_Image2}';
+    return false;
+    }
+    </script>
+    
+</apex:page>

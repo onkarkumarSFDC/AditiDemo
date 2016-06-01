@@ -1,0 +1,106 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false" controller="siteHomecontroller">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<apex:stylesheet value="{!URLFOR($Resource.community, '/community/css/bootstrap.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.community, '/community/css/pignose.layerslider.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.community, '/community/css/style.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/jquery-2.1.4.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/simpleCart.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/bootstrap-3.1.1.min.js')}"/>
+<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'/>
+<link href='//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic' rel='stylesheet' type='text/css'/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/jquery.easing.min.js')}"/>
+<style>
+    .Divborder{
+        border: 1px solid #00395C;
+        padding-bottom: 20px;
+        position: relative;
+    }
+</style>
+
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+        function hideURLbar(){ window.scrollTo(0,1); } </script>
+
+<script>
+        function RegisterUser(){
+            alert('Entered..');
+            var firstName=document.getElementById('firstName').value;
+            var lastName=document.getElementById('lastName').value;
+            var emailId=document.getElementById('emailId').value;           
+            alert('a'+firstName+lastName+emailId);
+                Visualforce.remoting.Manager.invokeAction(
+                 '{!$RemoteAction.siteHomecontroller.registerUser}',
+                 firstName,lastName,emailId,
+                 function(result, event){
+                        if (event.status) {                            
+                            alert('remote called.'+result);                            
+                            hideSpinner();
+                            if(result!=null){
+                                alert(result);
+                            }else{
+                                alert('Server Down..Please try after sometime.');
+                            }
+                            
+                            //window.location.href='../apex/ECommerce_HomePage';
+                            
+                        }
+                    }, 
+                    {escape: true}
+                );
+        }
+</script>        
+<c:siteheader2 />
+<!--<apex:outputLink value="{!$Site.Prefix}/secure/logout.jsp" rendered="{!NOT(ISPICKVAL($User.UserType,'Guest'))}">Logout</apex:outputLink>-->
+
+<c:BestSeller />
+<!-- product-nav -->
+
+<div class="product-easy">
+    <div class="container">
+        
+        <apex:includeScript value="{!URLFOR($Resource.community, '/community/js/easyResponsiveTabs.js')}"/>
+        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#horizontalTab').easyResponsiveTabs({
+                                    type: 'default', //Types: default, vertical, accordion           
+                                    width: 'auto', //auto or any width like 600px
+                                    fit: true   // 100% fit in a container
+                                });
+                            });
+                            
+        </script>
+        <div class="sap_tabs">
+            <div id="horizontalTab" style="display: block; width: 100%; margin: 0px;">
+                <ul class="resp-tabs-list">
+                    <li class="resp-tab-item" aria-controls="tab_item-0" role="tab"><span>Latest Designs</span></li> 
+                    <li class="resp-tab-item" aria-controls="tab_item-1" role="tab"><span>Special Offers</span></li> 
+                    <li class="resp-tab-item" aria-controls="tab_item-2" role="tab"><span>Collections</span></li> 
+                </ul>                    
+                <div class="resp-tabs-container">
+                   <div class="tab-1 resp-tab-content" aria-labelledby="tab_item-0">
+                   <apex:repeat value="{!AllProduct}" var="prod">
+                             <c:product1 code="1" Listprice="{!prod.Price__c}" sellprice="{!Prod.Price__c}" name="{!Prod.Name}" Image="{!Prod.Image_URL__c}"></c:product1>
+                    </apex:repeat>
+                   <div class="clearfix"></div>
+                   </div>
+                    <div class="tab-1 resp-tab-content" aria-labelledby="tab_item-1">
+                   <div class="clearfix"></div>
+                   </div>
+                    <div class="tab-1 resp-tab-content" aria-labelledby="tab_item-2">
+                   <div class="clearfix"></div>
+                   </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //product-nav -->
+
+<c:sitefooter1 ></c:sitefooter1>
+<c:loginpopup />
+<script>
+$( " div[class ^= simpleCart_shelfItem]" ).mouseover(function() {
+  $( this ).toggleClass( "men-pro-item" );
+});
+</script>
+</apex:page>

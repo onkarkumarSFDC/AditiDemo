@@ -1,0 +1,50 @@
+<apex:component >
+
+<!-- footer -->
+<div class="footer">
+    <div class="container">
+        <div class="col-md-3 footer-left">
+            <h2>Satisfaction Guaranteed</h2>
+            <p>Not completely satisfied with your purchase? You may return it within 30 days from the date of purchase.</p>
+        </div>
+        <div class="col-md-9 footer-right">
+            <div class="col-sm-6 newsleft">
+                <h3>SIGN UP FOR NEWSLETTER !</h3>
+            </div>
+            <div class="col-sm-6 newsright">
+                <form>
+                    <input type="text" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required=""/>
+                    <input type="submit" value="Submit"/>
+                </form>
+            </div>
+            <div class="clearfix"></div>
+            <div class="sign-grds">
+                <div class="col-md-4 sign-gd">
+                    <h4>Information</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="mens.html">Headphone</a></li>
+                        <li><a href="womens.html">Home Audio</a></li>
+                        <li><a href="electronics.html">Car Audio</a></li>
+                        <li><a href="codes.html">Factory Recertified</a></li>
+         
+                    </ul>
+                </div>
+                
+                <div class="col-md-4 sign-gd-two">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i>Email : <a href="mailto:info@example.com">info@harman.com</a></li>
+                        <li><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>Phone : +1(877) 871-6755</li>
+                    </ul>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <p class="copy-right">Copy 2016 HARMAN Audio All rights reserved </p>
+    </div>
+</div>
+<!-- //footer -->
+</apex:component>

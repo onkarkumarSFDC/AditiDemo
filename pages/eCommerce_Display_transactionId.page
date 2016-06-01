@@ -1,0 +1,9 @@
+<apex:page >
+    <apex:form >
+    <apex:commandButton value="Do" reRender="block" status="actStatusId"/> 
+ <apex:actionStatus id="actStatusId" >
+<apex:facet name="start" > <img src="/img/loading.gif" />Loading...
+</apex:facet>
+</apex:actionStatus>
+    </apex:form>
+</apex:page>

@@ -1,0 +1,30 @@
+<apex:page showHeader="false" sidebar="false" >
+  <br />
+    <!-- <apex:panelBar style="background-color:lightgrey;" >-->        
+        <apex:outputPanel id="btnMobileNav" style="display: block;
+                                                    width: 48px;
+                                                    font-size: 13px;
+                                                    font-weight: bold;
+                                                    line-height: normal;
+                                                    text-transform: uppercase;
+                                                    height: 16px;
+                                                    padding-left: 0px;
+                                                    overflow: hidden;
+                                                    cursor: pointer;
+                                                    position: absolute;
+                                                    left: 15px;
+                                                    top: 20px;
+                                                    margin-left:40px;
+                                                    "><apex:image id="menu" value="{!$Resource.btnNavPage}" />
+          </apex:outputPanel>        
+      <apex:outputPanel id="panel1" style="float:right;width:100%;height:30px;background-color:lightgrey;">
+          <apex:panelGrid style="float:right;padding-left: 50px;"></apex:panelGrid>
+          <apex:outputLink style="float:right;text-decoration:none;padding:4Px;font-size:15px;font-family:calibri;" id="tab4" value="asdasd">Dealers</apex:outputLink> &nbsp;&nbsp;
+          <apex:outputLink style="float:right;text-decoration:none;padding:4Px;font-size:15px;font-family:calibri;" id="tab3" value="asdasd">Contact</apex:outputLink>&nbsp; &nbsp;
+          <apex:outputLink style="float:right;text-decoration:none;padding:4Px;font-size:15px;font-family:calibri;" id="tab2" value="asdasd">Support</apex:outputLink>&nbsp;&nbsp;
+          <apex:outputLink style="float:right;text-decoration:none;padding:4Px;font-size:15px;font-family:calibri;" onmouseover="" id="tab1" value="asd">Home</apex:outputLink>                      
+      </apex:outputPanel>
+      <br />
+      <apex:image id="theImage"  style="margin-left:50px;margin-top:5px;" value="{!$Resource.Harmanimg}" width="150" height="150"/>
+
+</apex:page>

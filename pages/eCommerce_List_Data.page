@@ -1,0 +1,437 @@
+<apex:page showHeader="false" controller="eCommerceHomePage" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0" action="{!selectedProductSummary}">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>   
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
+<apex:stylesheet value="{!URLFOR($Resource.SLDS103, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />    
+<apex:includeScript value="{!URLFOR($Resource.jquery214)}" />   
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<apex:stylesheet value="{!URLFOR($Resource.community, '/community/css/bootstrap.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.community, '/community/css/pignose.layerslider.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.community, '/community/css/style.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/jquery-2.1.4.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/simpleCart.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/bootstrap-3.1.1.min.js')}"/>
+<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'/>
+<link href='//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic' rel='stylesheet' type='text/css'/>
+<apex:includeScript value="{!URLFOR($Resource.community, '/community/js/jquery.easing.min.js')}"/>
+ 
+ <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    
+    
+    <script type="text/javascript">
+            function selectTab(elmnt) {
+                // slds-active
+                $(elmnt).parent("li").siblings(".slds-active").removeClass("slds-active");
+                $(elmnt).parent("li").addClass("slds-active");
+            
+                // tabindex
+                $(elmnt).parent("li").siblings().children("a").attr("tabindex", -1);
+                $(elmnt).attr("tabindex", 0);
+            
+                // aria-selected
+                $(elmnt).parent("li").siblings().children("a").attr("aria-selected", false);
+                $(elmnt).attr("aria-selected", true);
+            
+                // hiding previouly selected tab (slds-show/slds-hide)
+                $(elmnt).closest(".slds-tabs--default").children("div[role='tabpanel'].slds-show").addClass("slds-hide");
+                $(elmnt).closest(".slds-tabs--default").children("div[role='tabpanel'].slds-show").removeClass("slds-show");
+                // displaying newly selected tab (slds-show/slds-hide)
+                $(elmnt).closest(".slds-tabs--default").children("div[aria-labelledby='"+elmnt.id+"']").addClass("slds-show");
+                $(elmnt).closest(".slds-tabs--default").children("div[aria-labelledby='"+elmnt.id+"']").removeClass("slds-hide");
+            }
+            
+            function openWin() {
+                var userLoggedIn= document.getElementById('userLoggedIn').value;
+                window.open("/apex/eCommerce_List_Data?sessionId="+userLoggedIn);
+            }  
+            
+            
+            simpleCart.email = "ajay.satish@harman.com";
+            simpleCart.checkoutTo = PayPal;
+            simpleCart.currency = USD;
+            simpleCart.cartHeaders = ["thumb_image" , "Quantity_input" ,   "Total", "remove" ];
+    
+
+    </script>
+    
+    <style>
+        .photos {
+          display: block;
+        }
+
+        
+        
+        .outBorder
+        {
+            border-bottom:2px outset black;
+            border-top:2px outset black;
+            border-left:2px outset black;
+            border-right:2px outset black;
+            border-color:grey;
+            
+        }
+        
+        .container {
+        width:auto;
+        margin: 0 auto;
+        position:relative;
+        }
+
+        .banner {
+        background-image: url(../img/banner-lg.jpg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+
+        } 
+        
+        .itemContainer {
+            background:red;
+        }
+        .cartHeaders {
+            display:none;
+        }
+        
+    </style>
+    
+    <body>    
+           
+      <!-- REQUIRED SLDS WRAPPER -->
+      <!-- <div class="slds" style="background-image: url({!$Resource.background});"> -->
+      <div class="slds">
+      
+                
+        <!-- MASTHEAD -->                                 
+        <a href="../apex/ECommerce_HomePage"><button class="slds-button"><font color="black">Home</font></button></a>
+        <button class="slds-button"><font color="black">Support</font></button>
+        <button class="slds-button"><font color="black">Contact</font></button>&nbsp; &nbsp;  
+        <apex:outputText style="float:right;" rendered="{!isLoggedUser==false}"><a href="../apex/eCommerce_Signup_Page"><font color="Black">NewUser?Register</font></a></apex:outputText> &nbsp;                                  
+        <apex:outputText rendered="{!isLoggedUser==true}"  id="userLoggedIn" value="Logged In As: {!$User.FirstName} {!$User.LastName}"></apex:outputText>&nbsp;                                  
+        <apex:outputText rendered="{!isLoggedUser==false}"  id="exUserLogin"><a href="../apex/eCommerce_Signin_Page"><font color="Black">Login</font></a></apex:outputText>&nbsp; &nbsp;          
+        <apex:outputText rendered="{!isLoggedUser==true && $User.LastName!='Guest User'}"  id="logout"><a href="../"><font color="Black">Switch to Salesforce</font></a></apex:outputText>&nbsp; &nbsp;         
+        <!-- / MASTHEAD --> 
+        <a href="javascript:;" class="simpleCart_checkout">Check Out</a>                 
+        <c:siteheader2_Copy />   
+            <apex:form rendered="{!(transacId==null || transacId=='')}" >
+            <!--<table BORDER="1" style="background-image: url({!$Resource.product_summary_background});">-->
+            <div class="ban-top">
+                  <!-- TABS -->
+                  <ul class="slds-tabs--default__nav" role="tablist">
+                    <li class="slds-tabs--default__item slds-text-heading--label" title="Tab 0" role="presentation"><a class="slds-tabs--default__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-0" id="tab-default-0__item" onclick="selectTab(this);"><font color="white">Home</font></a></li>                    
+                  </ul>
+                                
+                </div>              
+                <!-- TAB0-->
+                <div id="tab-default-0" class="slds-tabs--default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-0__item" >                                                  
+                <div class="new_arrivals">
+                        <div class="container">
+                            <h3><span>Best </span>Sellers</h3>
+                            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
+                            
+                        </div>
+                    </div>
+                    <!-- //content -->
+
+                    <!-- content-bottom -->
+
+                    <div class="content-bottom">
+                        <div class="col-md-7 content-lgrid">
+                            <div class="col-sm-6 content-img-left text-center">
+                                <div class="content-grid-effect slow-zoom vertical">
+                                    <div class="img-box">
+                                    <!--<img src="http://demandware.edgesuite.net/aauj_prd/on/demandware.static/-/Sites-HA-US-Library/default/dwc28cda9f/home%20hero%20carousel/JBL_Flip3Sale_1400x536.jpg"  alt="image" class="img-responsive zoom-img"/>-->
+                      <img src="{!URLFOR($Resource.community,'/community/images/JBL_Flip3Sale_1400x536.jpg')}" alt="image" class="img-responsive zoom-img"/></div>
+                                        <div class="info-box">
+                                            <div class="info-content simpleCart_shelfItem">
+                                                        <h4 style="color:white;">JBL Pulse</h4>
+                                                        <span class="separator"></span>
+                                                        <p><span class="item_price">$500</span></p>
+                                                        <span class="separator"></span>
+                                                        <a class="item_add hvr-outline-out button2" href="#">add to cart </a>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 content-img-right">
+                                <h3>Special Offers and 50%<span>Discount On</span> JBL </h3>
+                            </div>
+                            
+                            <div class="col-sm-6 content-img-right">
+                                <h3>Buy 1 get 1  free on <span> Branded</span> Wireless Headphone</h3>
+                            </div>
+                            <div class="col-sm-6 content-img-left text-center">
+                                <div class="content-grid-effect slow-zoom vertical">
+                                    <div class="img-box">
+                                    <img src="{!URLFOR($Resource.community,'/community/images/HK_SohoTravel_1400x536.jpg')}" alt="image" class="img-responsive zoom-img"/>
+                                   <!-- <img src="http://demandware.edgesuite.net/aauj_prd/on/demandware.static/-/Sites-HA-US-Library/default/dw1c97734d/home%20hero%20carousel/HK_SohoTravel_1400x536.jpg" alt="image" class="img-responsive zoom-img"/>-->
+                                    <!--<img src="{!URLFOR($Resource.community,'/community/images/p2.jpg')}" alt="image" class="img-responsive zoom-img"/>-->
+                                    </div>
+                                        <div class="info-box">
+                                            <div class="info-content simpleCart_shelfItem">
+                                                <h4 style="color:White;">HARMAN Soho</h4>
+                                                <span class="separator"></span>
+                                                <p><span class="item_price">$250</span></p>
+                                                <span class="separator"></span>
+                                                <a class="item_add hvr-outline-out button2" href="#">add to cart </a>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-md-5 content-rgrid text-center">
+                            <div class="content-grid-effect slow-zoom vertical">
+                                    <div class="img-box"><img src="{!URLFOR($Resource.community,'/community/images/p4.jpg')}" alt="image" class="img-responsive zoom-img"/></div>
+                                        <div class="info-box">
+                                            <div class="info-content simpleCart_shelfItem">
+                                                        <h4>Speakers</h4>
+                                                        <span class="separator"></span>
+                                                        <p><span class="item_price">$150</span></p>
+                                                        <span class="separator"></span>
+                                                        <a class="item_add hvr-outline-out button2" href="#">add to cart </a>
+                                            </div>
+                                        </div>
+                                </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <!-- //content-bottom -->
+                    <!-- product-nav -->
+
+                </div>
+
+                <!-- TAB0-->
+            <table BORDER="1">
+                <th class="slds-page-header"> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;  ITEM
+                </th>
+                <th class="slds-page-header">
+                  QTY
+                </th>
+                <th class="slds-page-header">
+                   PRICE(Rs)
+                </th>                
+                    <tr>
+                        <br /><td align="center">                                                                                               
+                            &nbsp;<img align="center" src="{!prodAttchMap[prodInfo.id]}" width="250Px" height="350px"/>    <br />                                                  
+                        </td>
+                        <td id="quantity"><font size="5" >&nbsp;&nbsp;&nbsp;&nbsp;{!qty}</font></td>
+                        <td  id="totalPrice"><font size="5">&nbsp;&nbsp;&nbsp;&nbsp;{!totalPrice}</font></td>                        
+                    </tr>              
+            </table>    
+            <br />
+            <br />
+            </apex:form>
+            <div align="left">
+            
+            
+                <!--<div ng-app="myapp" style="background-image: url({!$Resource.product_summary_background});">-->
+                <div ng-app="myapp">                        
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h2 id="badges" align='left'   class="slds-page-header"><font size="5">Fill below information to Checkout</font></h2>
+                    <form name="myForm" id="form">
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="email" class="sign-up" ><font size="3">Enter the Email Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></label> 
+                           <input style="width:250Px;margin-left:20px;margin-top:25px;float:center;"  class="slds-input" type="email" id="email" name="email" ng-model="formData.email" required="true" placeholder="Enter email address" />
+                           <span ng-show="myForm.email.$error.required && myForm.email.$dirty">required</span>
+                           <span ng-show="!myForm.email.$error.required && myForm.email.$error.email && myForm.email.$dirty">invalid email</span>
+                            <br />  
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="phoneNumber" class="sign-up" ><font size="3">Enter the Phone Number:&nbsp;&nbsp;&nbsp;&nbsp;</font></label>
+                           <input class="slds-input" style="width:250Px;margin-left:20px;margin-top:25px;float:center;" type="text" id="phoneNumber" name="phoneNumber" ng-model="formData.phoneNumber" required="true" placeholder="Phone number" ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0-9]{1,12}$/"  />
+                           <span ng-show="((myForm.phoneNumber.$error.minlength ||myForm.phoneNumber.$error.maxlength)&& myForm.phoneNumber.$dirty)">Must be 10 digits</span>
+                           <span ng-show="myForm.phoneNumber.$error.pattern">enter only Numeric value</span>
+                           <span ng-show="(myForm.phoneNumber.$error.required && myForm.phoneNumber.$dirty)">required</span>               
+                           <br />
+                           
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="delAddre" class="sign-up" ><font size="3">Enter the Shipping Address:&nbsp;</font></label>
+                           <!--<input class="slds-input" style="width:250Px;height:200px;margin-left:20px;margin-top:25px;float:center;" type="text" id="delAddre" name="delAddre" ng-model="formData.delAddre" required="true" placeholder="Delivery Address" />                             -->
+                            <textarea  class="slds-input" style="width:250Px;height:100px;margin-left:20px;margin-top:25px;float:center;" id="delAddre" rows="4" cols="10" name="delAddre" ng-model="formData.delAddre" required="true" placeholder="Shipping Address" ></textarea>                              
+                           <span ng-show="(myForm.delAddre.$error.required && myForm.delAddre.$dirty)">required</span>               
+                           <br />
+                            
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="bankName" class="sign-up" ><font size="3">Please Select Bank Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></label> 
+                            <!--<apex:form id="apexForm"><apex:selectList id="bankName" styleclass="slds-input" style="width:250Px;margin-left:20px;margin-top:25px;float:center;" value="{!BankName}" size="1" required="true">
+                                <apex:selectOptions value="{!listOfBanks}"/>
+                            </apex:selectList> </apex:form> -->
+                             <select id="bankName" class="slds-input" style="width:250Px;margin-left:20px;margin-top:25px;float:center;" required="true" >
+                               <option value = "HDFC Bank">HDFC BANK</option>
+                               <option value = "Axis Bank">AXIS BANK</option>                              
+                             </select>
+                            <span ng-show="(myForm.apexForm.bankName.$error.required && myForm.apexForm.bankName.$dirty)">required</span> 
+                            <br />  
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="card" class="sign-up" ><font size="3">Enter the Card Number:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></label>
+                            <input class="slds-input" style="width:250Px;margin-left:20px;margin-top:25px;float:center;" type="text" id="card" name="card" ng-model="formData.card" required="true" placeholder="Card Number" ng-minlength="10" ng-maxlength="16" ng-pattern="/^[0-9]{1,16}$/"  />                           
+                            <span ng-show="myForm.card.$error.pattern">enter only Numeric value</span>
+                            <span ng-show="(myForm.card.$error.required && myForm.card.$dirty)">required</span>               
+                            <br />  
+                            
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="cardType" class="sign-up" ><font size="3">Please Select CardType:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></label>                                 
+                             <select id="cardType" class="slds-input" style="width:250Px;margin-left:20px;margin-top:25px;float:center;" required="true" >
+                               <option value = "Visa">Visa</option>
+                               <option value = "MasterCard">MasterCard</option>                              
+                             </select>
+                            <span ng-show="(myForm.apexForm.cardType.$error.required && myForm.apexForm.cardType.$dirty)">required</span> 
+                            <br />    
+
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="pinCode" class="sign-up" ><font size="3">Enter the PIN Code:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></label>
+                            <input class="slds-input" style="width:250Px;margin-left:40px;margin-top:25px;float:center;" type="password" id="pinCode" name="pinCode" ng-model="formData.pinCode" required="true" placeholder="Pin Number" ng-minlength="0" ng-maxlength="4"  />
+                            <span ng-show="(myForm.pinCode.$error.required && myForm.pinCode.$dirty)">required</span>               
+                            <br />                                                              
+                            
+                            <div class="slds-col slds-no-flex slds-align-bottom">
+                              <div class="slds-button-group" role="group">
+                                <!--<button class="slds-button slds-button--neutral" target="popup" onclick="window.open('../apex/eCommerce_List_Data?sessionId={!loggedInUserName}&pCode={!prodInfo.Id}&qty={!quantity}','name','left=300,top=200,width=600,height=400');">Add to Cart</button>-->
+                                <!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button style="width:200Px;margin-left:100px;margin-top:30px;float:center;" onclick="window.open('../apex/eCommerce_Payment_Page?sessionId={!loggedInUserId}&pCode={!pCode}&qty={!qty}','popup','width=600,height=500');return false;" >Proceed for Payment</button>                                -->                                                         
+                                <button type="submit" style="width:200Px;margin-left:100px;margin-top:30px;float:center;" ng-disabled="myForm.$valid && myForm.$submitted" onClick="generateTid()">Proceed for Payment</button>                                 
+                                <a href="../apex/ECommerce_HomePage?sessionId={!loggedInUserName}" style="width:200Px;margin-left:100px;margin-top:25px;float:center;">Back to Home</a>                                                                      
+                                 
+                             </div>                                                                                                        
+                            </div> 
+                        <br />  
+                        <br /> 
+                        <apex:outputPanel id="loading" rendered="{!transactionid==null}">                          
+                        <div id="opaque"/>
+                        <div id="spinner">
+                            <p align="center" style='{font-family:"Arial", Helvetica, sans-serif; font-size:20px;}'><apex:image value="/img/loading.gif"/>&nbsp;Please wait</p>
+                        </div>  
+                        </apex:outputPanel>  
+                        
+                    </form>
+                                    
+                            <!--<apex:form ><apex:Commandbutton  style="width:75Px;margin-left:20px;margin-top:25px;float:center;" value="Register" onclick="registerNewUser();"></apex:Commandbutton></apex:form>-->
+                </div>                          
+            
+            </div>
+            
+            
+                  
+    </div> 
+
+    <p id="demo" style="background-color:lightgreen;"> </p>
+    
+<script>
+
+    function showSpinner()
+    {
+       document.getElementById("opaque").style.display="block";
+       var popUp = document.getElementById("spinner");
+      
+       popUp.style.display = "block";
+       //alert('1');
+    } 
+    
+    function hideSpinner()
+    {
+       document.getElementById('opaque').style.display='none';
+       var popUp = document.getElementById('spinner');
+      
+       popUp.style.display = 'none';
+       //alert('2');
+    } 
+    
+    function generateTid(){
+            
+            var con = confirm('Are you sure?');                
+            var price='{!totalPrice}';
+            var address=document.getElementById('delAddre').value;
+            //alert('addr'+address);            
+            var Quantity='{!qty}';
+            //alert('qty{!qty}');
+            var emailId=document.getElementById('email').value;
+            //alert('Email'+emailId);
+            var phoneNum=document.getElementById('phoneNumber').value;          
+            //alert('Phone'+phoneNum);
+            var bankName=document.getElementById('bankName').value;
+            //alert('Bank'+bankName);
+            var cardNum=document.getElementById('card').value;
+            
+            var cardType=document.getElementById('cardType').value;
+            //alert('cardNum'+cardNum);
+            //var pinCode=document.getElementById('pinCode').value;
+            var prodCode='{!pCode}';
+            //alert('pinCode'+prodCode);
+            if(con && address!='' && emailId!='' && phoneNum!='' && cardNum!='' && pinCode!='' && cardType!=''){
+                showSpinner();
+                //alert('Calling..');
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.eCommerceHomePage.generateTransactionid}',
+                     phoneNum,price,address,Quantity,emailId,bankName,cardNum,prodCode,cardType,            
+                    function(result, event){
+                        if (event.status) {
+                            // Get DOM IDs for HTML and Visualforce elements like this
+                            //alert('remote called.'+result);
+                            var a = 'Successfull Transaction- Please note this Reference Id: '+result;
+                            hideSpinner();
+                            if(result!=null){
+                                alert(a);
+                            }else{
+                                alert('Server Down..Please try after sometime.');
+                            }
+                            
+                            window.location.href='../apex/ECommerce_HomePage';
+                            
+                        }
+                    }, 
+                    {escape: true}
+                );
+            }
+    }
+    
+        var app = angular.module('myapp', ['UserValidation']);
+
+        angular.module('UserValidation', []).directive('validPasswordC', function () {
+                return {
+                require: 'ngModel',
+                link: function (scope, elm, attrs, ctrl) {
+                    ctrl.$parsers.unshift(function (viewValue, $scope) {
+                                            var noMatch = viewValue != scope.myForm.password.$viewValue
+                                        ctrl.$setValidity('noMatch', !noMatch)
+                                        })
+                    }
+                }
+        })
+</script>
+<style>
+#spinner{
+        display: none;
+        width:200px;
+        height: 50px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align:center;
+        padding:10px;
+        font:normal 16px Tahoma, Geneva, sans-serif;
+        margin-left: -100px;
+        margin-top: -100px;
+        z-index:2;
+        overflow: auto;
+        border:1px solid #CCC;
+        background-color:white;
+        z-index:100;
+        padding:5px;
+        line-height:20px;
+     }
+     #opaque {
+         position: fixed;
+         top: 0px;
+         left: 0px;
+         width: 100%;
+         height: 100%;
+         z-index: 1;
+         display: none;
+         background-color: gray;
+         filter: alpha(opacity=30);
+         opacity: 0.3;
+         -moz-opacity:0.3;
+         -khtml-opacity:0.3
+     }
+     * html #opaque {
+         position: absolute;
+     }
+</style>
+  
+</body>
+</html>
+</apex:page>

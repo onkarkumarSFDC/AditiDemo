@@ -1,0 +1,178 @@
+<apex:page sidebar="false" showHeader="false" controller="eCommerceHomePage" docType="html-5.0">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>   
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
+<apex:stylesheet value="{!URLFOR($Resource.SLDS103, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />    
+<apex:includeScript value="{!URLFOR($Resource.jquery214)}" />   
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">    
+    
+    <script type="text/javascript">
+            function selectTab(elmnt) {
+                // slds-active
+                $(elmnt).parent("li").siblings(".slds-active").removeClass("slds-active");
+                $(elmnt).parent("li").addClass("slds-active");
+            
+                // tabindex
+                $(elmnt).parent("li").siblings().children("a").attr("tabindex", -1);
+                $(elmnt).attr("tabindex", 0);
+            
+                // aria-selected
+                $(elmnt).parent("li").siblings().children("a").attr("aria-selected", false);
+                $(elmnt).attr("aria-selected", true);
+            
+                // hiding previouly selected tab (slds-show/slds-hide)
+                $(elmnt).closest(".slds-tabs--default").children("div[role='tabpanel'].slds-show").addClass("slds-hide");
+                $(elmnt).closest(".slds-tabs--default").children("div[role='tabpanel'].slds-show").removeClass("slds-show");
+                // displaying newly selected tab (slds-show/slds-hide)
+                $(elmnt).closest(".slds-tabs--default").children("div[aria-labelledby='"+elmnt.id+"']").addClass("slds-show");
+                $(elmnt).closest(".slds-tabs--default").children("div[aria-labelledby='"+elmnt.id+"']").removeClass("slds-hide");
+            }
+            
+            function openWin() {
+                var userLoggedIn= document.getElementById('userLoggedIn').value;
+                window.open("/apex/eCommerce_List_Data?sessionId="+userLoggedIn);
+            }                   
+    </script>
+    <style>
+        .photos {
+          display: block;
+        }
+
+        .photos ul { list-style: none; }
+
+        .photos ul li { display: inline; }
+
+        .photos ul li a {
+          display: block;
+          float: left;
+          padding: 4px;
+          margin-right: 10px;
+          margin-bottom: 7px;
+          opacity: 0.75;
+          -webkit-transition: all 0.3s linear;
+          -moz-transition: all 0.3s linear;
+          transition: all 0.3s linear;
+        }
+        .photos ul li a:hover {
+          opacity: 1.0;
+        }
+
+        .photos ul li a img {
+          border: 6px solid #e1d9ec;
+        }
+    </style>
+    <body>    
+           
+      <!-- REQUIRED SLDS WRAPPER -->
+      <div class="slds"> 
+        <!-- MASTHEAD -->                                 
+        <button class="slds-button">Home</button>
+        <button class="slds-button">Support</button>
+        <button class="slds-button">Contact</button>&nbsp; &nbsp;  
+        <apex:outputText style="float:right;" rendered="{!isLoggedUser==false}"><a href="../apex/eCommerce_Signup_Page">NewUser?Register</a></apex:outputText> &nbsp;                                  
+        <apex:outputText rendered="{!isLoggedUser==true}"  id="userLoggedIn" value="Logged In As:{!loggedInUserName}"></apex:outputText>&nbsp;                                  
+        <apex:outputText rendered="{!isLoggedUser==false}"  id="exUserLogin"><a href="../apex/eCommerce_Signin_Page">Login</a></apex:outputText>&nbsp; &nbsp;                                            
+
+        <!-- / MASTHEAD -->  
+        <span>  
+        <apex:image alt="jbl" id="theImage" style="margin-left:50px;margin-right:10px;margin-top:40px;float:right;"  value="{!$Resource.Harmanimg}" width="100" height="100" />
+        </span>
+        <!-- PRIMARY CONTENT WRAPPER -->
+        <div class="myapp">    
+    
+          <!-- SECTION - BADGE COMPONENTS -->
+          <section aria-labelledby="badges" class="slds-page-header" role="banner"> 
+           <div>                                
+                <h1 align='center' class="slds-text-heading--label slds-m-bottom--small">
+                  Welcome to Harman eCommerce Page
+                </h1> 
+           </div>       
+            <h2 id="badges" align='center'   class="slds-text-heading--large slds-m-vertical--small">Harman e-Commerce </h2>
+            
+          </section>
+          <!-- / SECTION - BADGE COMPONENTS -->    
+    
+        </div>
+        <!-- / PRIMARY CONTENT WRAPPER -->                
+            
+        <!-- / PAGE HEADER -->          
+                <div class="slds-tabs--default">
+            
+                  <!-- TABS -->
+                  <ul class="slds-tabs--default__nav" role="tablist">
+                    <li class="slds-tabs--default__item slds-text-heading--label slds-active" title="Tab 1" role="presentation"><a class="slds-tabs--default__link" href="#void" role="tab" tabindex="0" aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item" onclick="selectTab(this);">Bluetooth Speakers</a></li>
+                    <li class="slds-tabs--default__item slds-text-heading--label" title="Tab 2" role="presentation"><a class="slds-tabs--default__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-2" id="tab-default-2__item" onclick="selectTab(this);">Home Theaters</a></li>
+                    <li class="slds-tabs--default__item slds-text-heading--label" title="Tab 3" role="presentation"><a class="slds-tabs--default__link" href="#void" role="tab" tabindex="-1" aria-selected="false" aria-controls="tab-default-3" id="tab-default-3__item" onclick="selectTab(this);">Car Speakers</a></li>
+                  </ul>
+            
+                  <!-- TAB 1 -->
+                  <div id="tab-default-1" class="slds-tabs--default__content slds-show" role="tabpanel" aria-labelledby="tab-default-1__item">                                                  
+                    <apex:pageBlock title="Wireless Products">
+                        <apex:pageBlockSection >
+                            <apex:repeat value="{!productsList}" var="blueS">
+                                <apex:pageBlockSectionItem >
+                                    <div class="slds-grid slds-grid--align-space">
+                                        <div>
+                                            <ul>
+                                                <!--<li class="slds-avatar slds-avatar--x-large" role="presentation"><a href="../apex/eCommerce_Select_Product_Information?sessionId={!loggedInUserName}" target="_blank" ><img src="http://placehold.it/120x120&text=image1" width="200" height="200"/><br /><br /><font size="3"> Product Name1</font></a></li>                                                                    -->
+                                                <li class="slds-avatar slds-avatar--x-large" role="presentation"><a href="../apex/eCommerce_Select_Product_Information?sessionId={!loggedInUserName}&pCode={!blueS.Id}" target="_blank" ><img src="{!prodAttchMap[blueS.Id]}" width="200" height="200"/><br /><br /><font size="3">{!blueS.Name}</font></a></li>                                                                     
+                                            </ul>
+                                        </div>                            
+                                    </div>                              
+                                </apex:pageBlockSectionItem>
+                            </apex:repeat>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                  </div>
+            
+                  <!-- TAB 2 -->
+                  <div id="tab-default-2" class="slds-tabs--default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-2__item">                    
+                    <apex:pageBlock title="Car Products">
+                        <apex:pageBlockSection >
+                            <apex:repeat value="{!carSpeakerList}" var="carS">
+                                <apex:pageBlockSectionItem >
+                                    <div class="slds-grid slds-grid--align-space">
+                                        <div>
+                                            <ul>
+                                                <!--<li class="slds-avatar slds-avatar--x-large" role="presentation"><a href="../apex/eCommerce_Select_Product_Information?sessionId={!loggedInUserName}" target="_blank" ><img src="http://placehold.it/120x120&text=image1" width="200" height="200"/><br /><br /><font size="3"> Product Name1</font></a></li>                                                                    -->
+                                                <li class="slds-avatar slds-avatar--x-large" role="presentation"><a href="../apex/eCommerce_Select_Product_Information?sessionId={!loggedInUserName}&pCode={!carS.Id}" target="_blank" ><img src="{!prodAttchMap[carS.Id]}" width="200" height="200"/><br /><br /><font size="3">{!carS.Name}</font></a></li>                                                                     
+                                            </ul>
+                                        </div>                            
+                                    </div>                              
+                                </apex:pageBlockSectionItem>
+                            </apex:repeat>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                  </div>
+            
+                  <!-- TAB 3 -->
+                  <div id="tab-default-3" class="slds-tabs--default__content slds-hide" role="tabpanel" aria-labelledby="tab-default-3__item">
+                    <apex:pageBlock title="Home Products">
+                        <apex:pageBlockSection >
+                            <apex:repeat value="{!hometheaterList}" var="homeS">
+                                <apex:pageBlockSectionItem >
+                                    <div class="slds-grid slds-grid--align-space">
+                                        <div>
+                                            <ul>
+                                                <!--<li class="slds-avatar slds-avatar--x-large" role="presentation"><a href="../apex/eCommerce_Select_Product_Information?sessionId={!loggedInUserName}" target="_blank" ><img src="http://placehold.it/120x120&text=image1" width="200" height="200"/><br /><br /><font size="3"> Product Name1</font></a></li>                                                                    -->
+                                                <li class="slds-avatar slds-avatar--x-large" role="presentation"><a href="../apex/eCommerce_Select_Product_Information?sessionId={!loggedInUserName}&pCode={!homeS.Id}" target="_blank" ><img src="{!prodAttchMap[homeS.Id]}" width="200" height="200"/><br /><br /><font size="3">{!homeS.Name}</font></a></li>                                                                     
+                                            </ul>
+                                        </div>                            
+                                    </div>                              
+                                </apex:pageBlockSectionItem>
+                            </apex:repeat>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                  </div>
+                    
+              </div>
+              
+                
+      </div>
+      <!-- / REQUIRED SLDS WRAPPER -->  
+               
+    </body>
+   </html>
+             
+            <br></br>            
+</apex:page>

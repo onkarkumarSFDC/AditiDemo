@@ -1,0 +1,35 @@
+<apex:component layout="none">
+<apex:attribute type="string"  name="code" description="productcode" required="true"/>
+<apex:attribute type="string"  name="Name" description="productcode" required="true"/>
+<apex:attribute type="string"  name="Listprice" description="productcode" required="true"/>
+<apex:attribute type="string"  name="Sellprice" description="productcode" required="true"/>
+<apex:attribute type="string"  name="Image" description="Image" required="true"/>
+
+
+<div class="col-md-3 product-men yes-marg">
+                            <div class="simpleCart_shelfItem Divborder">
+                                <div class="men-thumb-item">
+                                 <!--   <img src="{!URLFOR($Resource.community,'/community/images/a1.png')}" alt="" class="pro-image-front"/>-->
+                                  <!--  <img src="{!URLFOR($Resource.community,'/community/images/a1.png')}" alt="" class="pro-image-back"/>-->
+                                    <img src="{!Image}" alt=""  class="pro-image-front"/>
+                                    <img src="{!Image}" alt=""  class="pro-image-back"/>
+                                        <div class="men-cart-pro">
+                                            <div class="inner-men-cart-pro">
+                                                <a href="single.html" class="link-product-add-cart">Quick View</a>
+                                            </div>
+                                        </div>
+                                        <span class="product-new-top">New</span>
+                                        
+                                </div>
+                                <div class="item-info-product ">
+                                    <h4><a href="single.html">{!Name}</a></h4>
+                                    <div class="info-product-price">
+                                        <span class="item_price">${!Listprice}
+                                        </span>
+                                        <del>${!Sellprice}</del>
+                                    </div>
+                                    <a href="#" class="item_add single-item hvr-outline-out button2">Add to cart</a>                                    
+                                </div>
+                            </div>
+                        </div>
+</apex:component>

@@ -1,0 +1,124 @@
+<apex:page sidebar="false" showHeader="false" controller="eCommerceHomePage" docType="html-5.0" >
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>   
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
+<apex:stylesheet value="{!URLFOR($Resource.SLDS103, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+<script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>     
+<script src="/soap/ajax/28.0/connection.js" type="text/javascript"></script>
+<script src="/soap/ajax/28.0/apex.js" type="text/javascript"></script>      
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >    
+    <body>
+       <!--<apex:form >
+           
+          <div class="slds"> 
+        <span>  
+            <apex:image alt="jbl" id="theImage" style="margin-left:50px;margin-right:10px;margin-top:40px;float:right;"  value="{!$Resource.logo}" width="200px" height="350Px" />
+        </span>
+             &nbsp;&nbsp;&nbsp;<p align="center"><font size="6"> Harman e-Commerce Registration </font></p>
+          <br />    
+                          
+            <p align="left" id="userName"><font size="4"> Username (Email Address)</font></p>
+              <input style="width:350Px" id="text-input-01" class="slds-input" type="Email" placeholder="userName" />
+            <br /><br />                    
+              
+            <p align="left"><font size="4"> Password</font></p>                         
+            <input style="width:350Px" id="text-input-02" class="slds-input" type="password" placeholder="password" maxlength="8"/>                            
+            <br /><br />
+            
+            <p align="left"><font size="4">Confirm Password</font></p>                         
+            <input style="width:350Px" id="text-input-03" class="slds-input" type="password" placeholder="confirm password" maxlength="8"/>                            
+            <br /><br />
+            
+          </div>
+        <apex:Commandbutton value="Register" onclick="registerNewUser()" onComplete="redirectURL();"><font size="4"></font></apex:Commandbutton>        
+        </apex:form>
+        
+        <p id="status"></p>
+       -->
+        <apex:image alt="jbl" id="theImage" style="margin-left:5px;margin-right:10px;margin-top:4px;float:left;"   value="{!$Resource.logo}" />
+        <div class="slds"> 
+            <!--<span> </span>-->                             
+                 <p align="center"><font size="7" color="black"> Harman e-Commerce Login </font></p>
+              <br />  
+              
+            <div ng-app="myapp">
+           <form name="myForm" class="wrapper">
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="email"><font size="4" color="black">Username (Email Address):</font></label> <br /> 
+               <input style="width:250Px;margin-left:20px;margin-top:25px;float:center;"  class="slds-input" type="email" id="email" name="email" ng-model="formData.email" required="true" placeholder="Enter Email Address" />
+               <span ng-show="myForm.email.$error.required && myForm.email.$dirty"><font size="3" color="black">required</font></span>
+               <span ng-show="!myForm.email.$error.required && myForm.email.$error.email && myForm.email.$dirty"><font size="3" color="black">invalid email</font></span>
+               <br />
+          
+               <br />
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="password"><font size="4" color="black">Password:</font></label> <br /> 
+               <input style="width:250Px;margin-left:20px;margin-top:25px;float:center;" class="slds-input" type="password" id="password" name="password" ng-model="formData.password" placeholder="Password"  ng-minlength="8" ng-maxlength="20" ng-pattern="/(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z])/" required="true"  />
+               <span ng-show="myForm.password.$error.required && myForm.password.$dirty"><font size="3" color="black">required</font></span>               
+               <br />
+                              
+                <div class="wrapper">    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button  class="button" type="submit" ng-disabled="myForm.$valid && myForm.$submitted"  onclick="redirectURL();">Zoom....</button>         
+                </div> 
+                
+                <p id="responseErrors"></p>
+            </form>
+                
+            <!--<apex:form><apex:Commandbutton  style="width:75Px;margin-left:20px;margin-top:25px;float:center;" value="Register" onclick="registerNewUser();"></apex:Commandbutton></apex:form>-->
+           </div>
+        </div>
+        
+    </body>
+    </html>
+        
+      
+    
+    <script>        
+        function redirectURL(){
+            var userName=document.getElementById('email').value;
+            alert('name'+userName);
+            var password=document.getElementById('password').value;
+            //alert('pwd'+password);
+            
+            if(userName!='' && password!=''){
+                alert('invoking..');
+                
+                var qery='SELECT Id,Email from Contact where Email='+'\''+userName+'\''+' limit 1';             
+                var contactObj = sforce.connection.query(qery); 
+                if(contactObj==null || contactObj=='undefined'){
+                    document.getElementById("responseErrors").innerHTML = 'This user is not Registered.';
+                }
+                records = contactObj.getArray("records"); 
+                
+
+                var contId = records[0].Id;
+
+                window.location.href='../apex/ECommerce_HomePage?sessionId='+contId;
+            }
+        }
+                
+        var app = angular.module('myapp', ['UserValidation']);
+
+        angular.module('UserValidation', []).directive('validPasswordC', function () {
+                return {
+                require: 'ngModel',
+                link: function (scope, elm, attrs, ctrl) {
+                    ctrl.$parsers.unshift(function (viewValue, $scope) {
+                                            var noMatch = viewValue != scope.myForm.password.$viewValue
+                                        ctrl.$setValidity('noMatch', !noMatch)
+                                        })
+                    }
+                }
+        })
+    </script>
+    <style>
+        .wrapper {
+            text-align: left;
+        }
+
+        .button {
+            position: absolute;
+            top: 50%;
+            width:150Px;
+            height:40Px;            
+        }
+    </style>
+ 
+</apex:page>
